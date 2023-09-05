@@ -1,0 +1,325 @@
+{% extends 'Layout.html' %}
+{% block title %}
+<title>历史记录查询</title>
+{% endblock %}
+{% block css %}
+ <style>
+    /* 基本样式 */
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    /* 模态框样式 */
+    .modal-content {
+        border-radius: 10px;
+    }
+
+    .modal-header {
+        background-color: #3498db; /* 淡蓝色 */
+        color: #fff;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .modal-title {
+        margin: 0;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-footer {
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    /* 表单样式 */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .error-msg {
+        color: red;
+        font-size: 12px;
+    }
+
+    /* 按钮样式 */
+    .btn-primary {
+        background-color: #3498db; /* 淡蓝色 */
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #2184c6; /* 深一点的蓝色 */
+    }
+
+    .btn-default {
+        background-color: #ccc;
+        border: none;
+    }
+
+    .btn-default:hover {
+        background-color: #999;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+      <!-- 导航面板 -->
+    <div style="margin-bottom: 40px">
+
+        <div style="float: right;width: 300px">
+          <form method="get">
+            <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Search for..." name="q" value="{{ search_data }}">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </span>
+             </div>
+           </form>
+        </div>
+
+    </div>
+      <!-- 表格面板 -->
+    <div>
+            <div class="panel panel-default">
+      <!-- Default panel contents -->
+      <div class="panel-heading">
+           <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+           数据列表
+      </div>
+
+      <!-- Table -->
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>用户</th>
+            <th>车牌号</th>
+            <th>识别时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+          {% for obj in data_list %}
+        <tbody>
+          <tr uid="{{ obj.id }}">
+            <th scope="row">{{ obj.id }}</th>
+            <td>{{ obj.user }}</td>
+            <td>{{ obj.plate_number }}</td>
+            <td>{{ obj.recognition_time|date:"Y-m-y H:i:s" }}</td>
+            <td>
+               <!-- 查看图片 -->
+               <!--img style="width: 100px;height: 50px" src="{{ obj.file.url }}" alt="Uploaded Image"-->
+               <a class="btn btn-success btn-sm" href="/image/download/{{ obj.id }}/" download="{{ obj.user }}/{{ obj.recognition_time|date:"Y-m-y H:i:s"}}/image/download/{{ obj.id }}">下载</a>
+               <!--button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">查看</button-->
+               <button type="button" class="btn btn-primary btn-sm btn-show" >查看</button>
+               <input uid="{{ obj.id }}" type="button" class="btn btn-danger btn-sm btn-delete" value="删除">
+               <input edit_id="{{ obj.id }}" type="button" class="btn btn-info btn-sm btn-edit" value="勘误">
+
+                <!-- 查看图片模态框 -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">车牌详情</h4>
+          </div>
+          <div class="modal-body">
+
+
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <img style="max-width: 100%; max-height: 100%;" src="{{ obj.file.url }}" alt="Uploaded Image">
+            </div>
+
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">关 闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+                <!-- 删除模态框 -->
+             <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+       <div class="alert alert-danger alert-dismissible fade in" role="alert">
+        <h4>是否确认删除？</h4>
+      <p style="margin: 20px 0;">删除后无法数据无法恢复！！！</p>
+      <p style="text-align: right;">
+        <button id="btnConfirmDelete" type="button" class="btn btn-danger">确 认</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+      </p>
+    </div>
+      </div>
+    </div>
+            </td>
+
+                <!-- 勘误模态框 -->
+            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">识别勘误</h4>
+          </div>
+          <div class="modal-body">
+
+        <form id="editForm">
+            {% csrf_token %}
+            <div class="clearfix">
+              <div class="form-group" style="position: relative;margin: 10px">
+                <label>车牌号</label>
+                <input type="text" value="1" id="edit_input">
+                <span class="error-msg" style="color: red;position: absolute"></span>
+              </div>
+             </div>
+
+        </form>
+
+          </div>
+          <div class="modal-footer">
+            <button id="btnEditSave" type="button" class="btn btn-primary">确 认</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+          </tr>
+        </tbody>
+          {% endfor %}
+      </table>
+    </div>
+        </div>
+      <!-- 分页组件 -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {{ page_string }}
+        </ul>
+     </nav>
+</div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        var DELETE_ID;
+        var EDIT_ID;
+        $(function (){
+            bindBtnImageShowEvent();
+            bindBtnDeleteEvent();
+            bindBtnConfirmDeleteEvent();
+            bindBtnEditEvent();
+            bindBtnEditConfirm();
+
+        })
+        function bindBtnImageShowEvent(){
+            $(".btn-show").click(function (){
+                $("#myModal").modal('show')
+            })
+        }
+
+        function bindBtnDeleteEvent(){
+            $(".btn-delete").click(function (){
+                $("#deleteModal").modal('show')
+
+                // 获取删除的id
+                DELETE_ID = $(this).attr("uid")
+            })
+        }
+
+        function bindBtnConfirmDeleteEvent() {
+            $("#btnConfirmDelete").click(function (){
+                $.ajax({
+                    url: "/image/delete/",
+                    type: "GET",
+                    data:{
+                        uid:DELETE_ID
+                    },
+                    dataType: "JSON",
+                    success:function (res){
+                       if(res.status){
+                       alert('删除成功！！')
+                       $("#deleteModal").modal('hide')
+                        DELETE_ID = 0
+                       // 在页面上将当行数据删除
+                       //$("tr[uid='" + DELETE_ID + "']").remove()
+
+                       // 更简单的思路
+                       location.reload()
+
+                       }else {
+                           alert(res.error)
+                       }
+                    }
+                })
+            })
+        }
+
+        function bindBtnEditEvent(){
+            $(".btn-edit").click(function (){
+                EDIT_ID = $(this).attr("edit_id")
+                $.ajax({
+                    url:"/image/edit/find/",
+                    type: "GET",
+                    data:{
+                        edit_id:EDIT_ID
+                    },
+                    dataType: "JSON",
+                    success:function (res){
+                        if(res.status){
+                            $("#edit_input").val(res.data['plate_number'])
+                            $("#editModal").modal('show')
+                        }else {
+                            alert(res.error)
+                        }
+                    }
+                })
+            })
+        }
+
+        function bindBtnEditConfirm(){
+            $("#btnEditSave").click(function (){
+                $.ajax({
+                    url: '/image/edit/',
+                    type: "POST",
+                    data: {
+                        data:$("#editForm").serialize(),
+                        plate_number:$("#edit_input").val(),
+                        edit_number:EDIT_ID
+                    },
+                    dataType: "JSON",
+                    success: function (res){
+                        if(res.blank){
+                            $(".error-msg").text(res.error)
+                        }else {
+                            if(res.status){
+                            alert('勘误成功！！')
+                        }else {
+                            alert(res.error)
+                        }
+                           // 勘误后自动关闭对话框
+                        $("#editModal").modal('hide');
+                        EDIT_ID = 0;
+                        location.reload();
+                      }
+                    }
+                })
+
+            })
+        }
+    </script>
+{% endblock %}

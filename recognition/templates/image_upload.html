@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="user" placeholder="用户">
+            <input type="text" name="plate_number" placeholder="车牌号">
+            <input type="file" id="files" name="upload_file" accept="image/*" multiple>
+            <input type="submit" value="上传" class="btn btn-primary">
+        </form>
+    </div>
+
+</body>
+</html>
