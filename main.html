@@ -1,0 +1,142 @@
+{% extends 'Layout.html' %}
+{% load static %}
+{% block title %}
+    <title>鲁棒性智能车牌识别系统</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <hr>
+        <div class="jumbotron">
+            <p class="lead text-justify text-muted ">车牌识别是智能交通系统中的关键步骤。车牌识别系统(Vehicle License
+                Plate
+                Recognition，VLPR)
+                是计算机视频图像识别技术在车辆牌照识别中的一种应用。
+                车牌识别在高速公路车辆管理中得到广泛应用，电子收费（ETC）系统中，也是结合专用短程通信技术（DSRC）技术识别车辆身份的主要手段。
+                单双号限行制度是为了缓解城市交通压力而催生的一种交通制度。
+                在单双号车牌的智能识别中，识别精度是一个很重要的方面,而识别系统的鲁棒性也是衡量系统价值的重要属性。
+
+            </p>
+        </div>
+
+    </div>
+    <div>
+        {#            <div class="card mb-4 shadow-sm">#}
+        {#                <div class="row">#}
+        {##}
+        {#                    <div class="card-body">#}
+        {#                        <label for="file-input-image" class="btn btn-lg btn-block btn-outline-info">#}
+        {#                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"#}
+        {#                                 class="bi bi-arrow-up-circle" viewBox="0 0 16 16">#}
+        {#                                <path fill-rule="evenodd"#}
+        {#                                      d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>#}
+        {#                            </svg>#}
+        {#                            上传图片#}
+        {#                            <input type="file" id="file-input-image" name="upload_file" accept="image/*"#}
+        {#                                   style="display: none;" multiple>#}
+        {#                        </label>#}
+        {#                    </div>#}
+        {##}
+        {#                </div>#}
+        {#            </div>#}
+        {#            <div class="card mb-4 shadow-sm ">#}
+        {##}
+        {#                <div class="card-body">#}
+        {#                    <label for="file-input-video" class="btn btn-lg btn-block btn-outline-info">#}
+        {#                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"#}
+        {#                             class="bi bi-arrow-up-circle" viewBox="0 0 16 16">#}
+        {#                            <path fill-rule="evenodd"#}
+        {#                                  d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>#}
+        {#                        </svg>#}
+        {#                        上传视频#}
+        {#                        <input type="file" id="file-input-video" name="upload_file" accept="video/*"#}
+        {#                               style="display: none;" multiple>#}
+        {#                    </label>#}
+        {#                </div>#}
+        {##}
+        {#            </div>#}
+        {##}
+        {#        </div>#}
+
+        <div class="wrapper container ">
+            <header>上传文件</header>
+            <form action="#">
+                <input class="file-input" type="file" name="file" hidden>
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>拖拽文件至此处</p>
+            </form>
+            <section class="progress-area"></section>
+            <section class="uploaded-area"></section>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block js %}
+    {#    <script type="text/javascript">#}
+    {#        const fileInput = document.getElementById('fileInput');#}
+    {##}
+    {#        $(document).ready(function () {#}
+    {#            bindBtnFileSubmit();#}
+    {#        })#}
+    {##}
+    {#        function bindBtnFileSubmit() {#}
+    {#            fileInput.addEventListener('change', function () {#}
+    {#                // 获取用户选择的文件#}
+    {#                const selectedFiles = fileInput.files;#}
+    {##}
+    {#                if (selectedFiles.length > 0) {#}
+    {#                    $.ajax({#}
+    {#                        url: "/image/upload/",#}
+    {#                        type: "POST",#}
+    {#                        data: {#}
+    {#                            image: fileInput.files#}
+    {#                        },#}
+    {#                        // headers: { "X-CSRFToken": csrftoken }, // 添加CSRF令牌到请求头#}
+    {#                        dataType: "JSON",#}
+    {#                        success: function (res) {#}
+    {#                            if (res.status) {#}
+    {#                                alert("上传成功")#}
+    {#                            } else {#}
+    {#                                alert("上传失败")#}
+    {#                            }#}
+    {#                        }#}
+    {#                    })#}
+    {#                }#}
+    {##}
+    {##}
+    {#            })#}
+    {#        }#}
+    {#    </script>#}
+    {#    <script type="text/javascript">#}
+    {#        // 初始化Dropzone#}
+    {#        Dropzone.autoDiscover = false;#}
+    {#        var myDropzone = new Dropzone("#fileDropzone", {#}
+    {#            url: "/image/upload/", // 上传文件的URL，根据实际情况修改#}
+    {#            paramName: "file", // 后端接收文件的参数名，根据实际情况修改#}
+    {#            maxFilesize: 5, // 文件大小限制，单位为MB，根据实际情况修改#}
+    {#            acceptedFiles: ".png, .gif", // 允许上传的文件类型，根据实际情况修改#}
+    {#            dictDefaultMessage: "将文件拖拽至此处上传", // 默认提示信息#}
+    {#            dictFallbackMessage: "浏览器不支持拖拽上传，请使用文件选择器上传", // 浏览器不支持拖拽上传的提示信息#}
+    {#            dictFileTooBig: "文件过大 ({{filesize}}MB)，请上传小于{{maxFilesize}}MB的文件", // 文件过大的提示信息#}
+    {#            dictInvalidFileType: "不支持上传此类型的文件", // 不支持上传的文件类型的提示信息#}
+    {#            dictResponseError: "文件上传失败: {{statusCode}}", // 文件上传失败的提示信息#}
+    {#            dictCancelUpload: "取消上传", // 取消上传按钮的文本#}
+    {#            dictCancelUploadConfirmation: "确定取消上传吗？", // 取消上传确认的提示信息#}
+    {#            dictRemoveFile: "移除文件", // 移除文件按钮的文本#}
+    {#            dictMaxFilesExceeded: "超过最大文件数量 ({{maxFiles}})", // 超过最大文件数量的提示信息#}
+    {#            addRemoveLinks: true, // 添加移除文件的链接#}
+    {#            init: function () {#}
+    {#                // 文件上传成功后的处理#}
+    {#                this.on("success", function (file, response) {#}
+    {#                    // 在这里处理上传成功后的逻辑，可根据返回的响应进行相应操作#}
+    {#                    console.log("文件上传成功");#}
+    {#                    console.log("文件名：" + file.name);#}
+    {#                    console.log("响应：" + response);#}
+    {#                });#}
+    {#            }#}
+    {#        });#}
+    {#    </script>#}
+{% endblock %}
