@@ -48,8 +48,5 @@ def main_test(request):
     return render(request, 'dropzone_demo.html')
 
 
-def main_test_2(request):
-    return render(request, 'index.html')
-
 
 

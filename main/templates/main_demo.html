@@ -1,132 +1,50 @@
-{% extends 'layout.html' %}
-{% block content %}
-    <div class="container" id="main">
-        <a href="#">导入视频</a> <br/>
-        <a href="/image/upload/">导入图片</a><br/>
-        <a href="/image/display/">查看历史查询（表格）</a> <br/>
-        <a href="#">设置</a> <br/>
-        <a href="#" id="1">用户中心</a> <br/>
-        <input id="user" type="text" placeholder="请输入">
-        <input type="submit" value="提交" onclick="addUser()">
-    </div>
-    <div class="container">
-        <div>
-            <input type="button" value="新建订单1" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-            <input id="btnAdd" type="button" value="新建订单2" class="btn btn-primary">
-        </div>
-    </div>
-    <div>
-    <form action="/file-upload" class="dropzone" id="my-awesome-dropzone">
-        <div class="fallback">
-            <input name="file" type="file" multiple />
-        </div>
-    </form>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">新建订单</h4>
-          </div>
-          <div class="modal-body">
-
-
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <img style="max-width: 100%; max-height: 100%;" src="{{ image.file.url }}" alt="Uploaded Image">
-            </div>
-
-
-          </div>
-          <div class="modal-footer">
-            <button id="btnSave" type="button" class="btn btn-primary">确 认</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-{% endblock %}
-{% block js %}
-<script type="text/javascript">
-    // 跑马灯
-    function show() {
-          var tag = document.getElementById("system_title");
-          var dataString = tag.innerText;
-
-          var firstChar = dataString[0];
-          var otherString = dataString.substring(1, dataString.length);
-          var newString = otherString + firstChar;
-
-          tag.innerText = newString;
-    }
-
-    var number = 0;
-    function num(){
-           console.log(number++);
-    }
-    {#setInterval(show,1000);#}
-    {#setInterval(num,1000);#}
-
-</script>
-<script type="text/javascript">
-    // 提交信息
-    function addUser() {
-        var input_tag = document.getElementById('user');
-        var input_value = input_tag.value;
-        if(input_value){
-            var new_tag = document.createElement("li");
-            new_tag.innerText = input_value;
-            var parentTag = document.getElementById('main');
-            parentTag.appendChild(new_tag);
-            input_tag.value = ''
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello World</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    <script type="text/babel">  
+        class TimeNow extends React.Component{
+            constructor(){
+                super();
+                this.state = {
+                    time: ''
+                }                
+            }
+            componentDidMount = () =>{
+                // 每隔一秒执行一次该更新函数
+                setInterval(()=>{
+                    var time = new Date().toLocaleString();
+                    this.setState({
+                        time
+                    });                    
+                }, 1000);
+            }           
+            render = () => {
+                const {time} = this.state;
+                return <div>时间：{time}</div>
+            }
         }
-
-    }
-</script>
-<script type="text/javascript">
-        // DOM加载完成后执行内置的函数
-        $(function (){
-            MybindBtnAddEvent();
-            bindBtnSaveEvent();
-        })
-
-        function MybindBtnAddEvent(){
-            $("#btnAdd").click(function (){
-                // 展示模态框
-                $("#myModal").modal('show')
-            })
+        class MessageBox extends React.Component{  
+            onClick = ()=>{  
+                alert('clicked');  
+            }
+            render = ()=>{return (
+                <div>
+                    <h1 onClick={this.onClick}>Hello World!</h1>
+                    <TimeNow />
+                </div>
+                )}
         }
-
-        function bindBtnSaveEvent(){
-            $("#btnSave").click(function (){
-
-                // 清除错误信息
-                $(".error-msg").empty();
-
-                // 在后台提交POST请求
-                $.ajax({
-                    url: "/order/add/",
-                    type: "POST",
-                    data: $("addForm").serialize(),
-                    dataType: "JSON",
-                    success:function (res){
-                        if(res.status){
-                       alert('添加成功');
-                   }else {
-                       // res.error --> 'title': '这个字段是必填项'，相当于传入了一个键值对
-                       $.each(res.error,function (name,data){
-                           $("#id_" + name).next().text(data[0]);
-                       })
-                   }
-
-
-                    }
-
-                })
-            })
-        }
-</script>
-{% endblock %}
+        ReactDOM.render( <MessageBox/>,  
+            document.getElementById('app'),
+        )
+    </script>
+</body>
+</html>

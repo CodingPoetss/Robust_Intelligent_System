@@ -1,9 +1,12 @@
 # python learning
 # coding time: 2023/8/31 20:50
+import json
 from wsgiref.util import FileWrapper
 import mimetypes
 from django.conf import settings
 from django.shortcuts import render, HttpResponse
+from django.utils import timezone
+
 from recognition.models import LicensePlateInfo
 from accounts.models import UserInfo
 from django.views.decorators.csrf import csrf_exempt
@@ -20,12 +23,14 @@ def image_upload(request):
     # 获取POST表单
     # user = request.POST.get('user')
     # plate_number = request.POST.get('plate_number')
+
+    print(request.headers)
     user = "xxx"
     plate_number = "xxx"
     # recognition_time = request.POST.get('recognition_time')
     # 识别日期是当前的时间
-    recognition_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    file_list = request.FILES.get('file')
+    recognition_time = timezone.now()
+    file_list = request.FILES.getlist('file')
     print(file_list)
 
     base_path = os.path.join(settings.MEDIA_ROOT, 'Images')  # 基础路径，使用 settings.MEDIA_ROOT
@@ -35,14 +40,19 @@ def image_upload(request):
     for rec_file in file_list:  # 每一张图片进行循环
         file_path = os.path.join(base_path, rec_file.name)  # 加上文件名，构建完整的文件保存路径
         with open(file_path, 'wb') as f:
-            f.write(rec_file.read())
+            for chunk in rec_file.chunks():  # 使用 chunks() 方法而不是 read() 来逐块写入文件
+                f.write(chunk)
+
 
     # 保存到数据库
     for rec_file in file_list:
         LicensePlateInfo.objects.create(user=user, plate_number=plate_number, recognition_time=recognition_time,
                                         file=rec_file)
 
-    return JsonResponse({'status': True})
+    return JsonResponse({"code": 200,
+                         "msg": "OK",
+                         "data": ""
+                         }, status=200)
 
 
 def image_display(request):

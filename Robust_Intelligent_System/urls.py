@@ -19,12 +19,13 @@ from Robust_Intelligent_System import settings
 from django.urls import path
 from main.views import main
 from recognition.views import image
+from recognition.views.get_plate_info_view import GetPlateInfoView
+from django.urls import re_path
 
 
 urlpatterns = [
     # 主操作界面
     path('test/', main.main_test),
-    path('drop/test/', main.main_test_2),
     path('', main.main_handle),
 
     # 导入视频流识别界面
@@ -38,6 +39,11 @@ urlpatterns = [
     path('image/delete/', image.image_delete),
     path('image/edit/find/', image.image_edit_find),
     path('image/edit/', image.image_edit),
+
+    # 车牌信息表
+
+    re_path(r'^platelist/?$', GetPlateInfoView.as_view(), name='plate_list'),
+
     # 设置界面
 
     # 跳转界面

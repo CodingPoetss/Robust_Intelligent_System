@@ -7,10 +7,6 @@
     {% block title %}
     {% endblock %}
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-4.6.2-dist/css/bootstrap.min.css' %}">
-
-    <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/dropzone.min.css"-->
-    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" rel="external nofollow"
-          type="text/css"/>
     <link rel="stylesheet" href="{% static 'plugins/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
 
@@ -66,8 +62,9 @@
 <script src="{% static 'js/script.js' %}"></script>
 <script src="{% static 'js/jquery-3.7.0.min.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.min.js' %}"></script>
-
-<!--script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script-->
+<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 {% block js %}
 {% endblock %}

@@ -25,9 +25,14 @@ SECRET_KEY = "django-insecure-%^i_&z#p_7v53vc)y#mo=rsff==+)c2swn^l_679fr(6o7ha=q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+APPEND_SLASH = False
+
+ALLOWED_HOSTS = ['*']
 
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # 允许前端服务器的源
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,11 +46,13 @@ INSTALLED_APPS = [
     "main.apps.MainConfig",
     "recognition.apps.RecognitionConfig",
     "accounts.apps.AccountsConfig",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -88,12 +95,20 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'robust_intelligent_system',  # 数据库名字
-        'USER': 'root',
-        'PASSWORD': '040514',
-        'HOST': '127.0.0.1',  # 那台机器安装了MySQL
+        'NAME': 'robust',  # 数据库名字
+        'USER': 'robust',
+        'PASSWORD': 'hXuEQGiw0suZXjmCxRQdrejizSTnky8rHN+DIoFzsrI=',
+        'HOST': 'db',  # 那台机器安装了MySQL
         'PORT': 3306,
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'robust_intelligent_system',  # 数据库名字
+    #     'USER': 'root',
+    #     'PASSWORD': '040514',
+    #     'HOST': 'localhost',  # 那台机器安装了MySQL
+    #     'PORT': 3306,
+    # }
 }
 
 
@@ -115,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Shanghai"       # 例如 'UTC' 或 'Asia/Shanghai'
 
 USE_I18N = True
 

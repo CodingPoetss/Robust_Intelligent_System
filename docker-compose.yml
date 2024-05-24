@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  backend:
+    image: codingpoetss/robust-system:latest
+    container_name: robust-system-backend
+    build: .
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - robust-network
+
+  db:
+    image: mysql:8.2
+    container_name: robust-db
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: "mysqladmin ping -h localhost || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - robust-network
+
+  nginx:
+    image: nginx:latest
+    container_name: robust-nginx
+    ports:
+      - "80:80"
+      # - "443:443"
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/html:/usr/share/nginx/html
+      # - ./nginx/certs:/etc/nginx/certs
+    depends_on:
+      - backend
+    networks:
+      - robust-network
+
+volumes:
+  mysql_data:
+
+networks:
+  robust-network:
+    name: robust-network
+    driver: bridge
