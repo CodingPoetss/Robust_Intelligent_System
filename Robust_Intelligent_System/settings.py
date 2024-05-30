@@ -96,9 +96,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'robust',  # 数据库名字
-        'USER': 'robust',
-        'PASSWORD': 'hXuEQGiw0suZXjmCxRQdrejizSTnky8rHN+DIoFzsrI=',
-        'HOST': 'db',  # 那台机器安装了MySQL
+        'USER': 'root',
+        'PASSWORD': '3260.hxs',
+        'HOST': 'localhost',  # 那台机器安装了MySQL
         'PORT': 3306,
     }
     # 'default': {

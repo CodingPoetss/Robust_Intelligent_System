@@ -21,11 +21,11 @@ from main.views import main
 from recognition.views import image
 from recognition.views.get_plate_info_view import GetPlateInfoView
 from django.urls import re_path
-
+from accounts.views import user
 
 urlpatterns = [
     # 主操作界面
-    path('test/', main.main_test),
+    path('test', main.main_test),
     path('', main.main_handle),
 
     # 导入视频流识别界面
@@ -47,7 +47,16 @@ urlpatterns = [
     # 设置界面
 
     # 跳转界面
+
+    # 用户
+    path('user/login', user.login_view, name='login'),
+    path('admin/login', user.admin_login_view, name='admin_login'),
+    path('user/register', user.user_register_view),
+    path('admin/register', user.admin_register_view),
+    path('user/showall', user.getAlluser)
+
 ]
+
 
 # 应当导入from django.conf.urls.static import static
 if settings.DEBUG:
